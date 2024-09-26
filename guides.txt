@@ -1,0 +1,6 @@
+psql -U postgres
+CREATE DATABASE medods
+\c medods
+\i db/model.sql
+\i db/optimize.sql
+\i db/mockUsers.sql
