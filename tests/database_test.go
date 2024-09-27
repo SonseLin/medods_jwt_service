@@ -25,12 +25,12 @@ func TestDBConnection(t *testing.T) {
 }
 
 func TestDBGetUserById(t *testing.T) {
-	db, err := logic.GetDBConn()
+	userDB, err := new(logic.UserDB).InitUserDB()
 	if err != nil {
-		t.Fatal("error connected to db")
+		t.Fatalf("Fatalno zadolbal err != nil")
 	}
-	defer db.Close()
-	user, err := logic.GetUserById(2, db)
+	defer userDB.Close()
+	user, err := logic.GetUserById(2, userDB.GetDBConn())
 	if err != nil {
 		t.Fatalf("Failed to get user by id: %s", err)
 	}
@@ -40,12 +40,12 @@ func TestDBGetUserById(t *testing.T) {
 }
 
 func TestDBAddUserIntoTable(t *testing.T) {
-	db, err := logic.GetDBConn()
+	userDB, err := new(logic.UserDB).InitUserDB()
 	if err != nil {
-		t.Fatal("error connected to db")
+		t.Fatalf("Fatalno zadolbal err != nil")
 	}
-	defer db.Close()
-	err = logic.AddUserIntoTable(db, "pashka", "228.228.227.012", "pashka@mail.ru")
+	defer userDB.Close()
+	err = logic.AddUserIntoTable(userDB.GetDBConn(), "pashka", "228.228.227.012", "pashka@mail.ru")
 	if err != nil {
 		t.Fatalf("Failed to add user: %s", err)
 	}
@@ -53,12 +53,12 @@ func TestDBAddUserIntoTable(t *testing.T) {
 }
 
 func TestDBDeleteUserFromTable(t *testing.T) {
-	db, err := logic.GetDBConn()
+	userDB, err := new(logic.UserDB).InitUserDB()
 	if err != nil {
-		t.Fatal("error connected to db")
+		t.Fatalf("Fatalno zadolbal err != nil")
 	}
-	defer db.Close()
-	err = logic.DeleteUserFromTable(db, "name", "pashka")
+	defer userDB.Close()
+	err = logic.DeleteUserFromTable(userDB.GetDBConn(), "name", "pashka")
 	if err != nil {
 		t.Fatalf("Failed to delete user from table: %s", err)
 	}

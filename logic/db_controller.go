@@ -9,35 +9,37 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var connDB *sql.DB
+type UserDB struct {
+	db *sql.DB
+}
 
 func InitConnection() (*sql.DB, error) {
 	connStr := "user=postgres dbname=medods password=postgres host=localhost sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	db_obj, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := db.Ping(); err != nil {
+	if err := db_obj.Ping(); err != nil {
 		return nil, err
 	}
-	connDB = db
-	return db, nil
+	return db_obj, nil
 }
 
-func GetDBConn() (*sql.DB, error) {
-	if connDB == nil {
-		db, err := InitConnection()
-		if err != nil {
-			return nil, err
-		}
-		connDB = db
+func (udb *UserDB) InitUserDB() (*UserDB, error) {
+	conn, err := InitConnection()
+	if err != nil {
+		return nil, err
 	}
-	return connDB, nil
+	return &UserDB{db: conn}, nil
 }
 
-func CloseConnection(db *sql.DB) {
-	db.Close()
+func (udb *UserDB) GetDBConn() *sql.DB {
+	return udb.db
+}
+
+func (udb *UserDB) Close() {
+	udb.db.Close()
 }
 
 func AddUserIntoTable(db *sql.DB, name, IP, email string) error {
