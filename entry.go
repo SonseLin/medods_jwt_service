@@ -1,22 +1,16 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
+	"log"
+	"medods_jwt_service/logic"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	connStr := "user=postgres dbname=medods password=postgres host=localhost sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	userDB, err := new(logic.UserDB).InitUserDB()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("Fatalno zadolbal err != nil")
 	}
-	defer db.Close()
-
-	if err := db.Ping(); err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("Connected!")
+	defer userDB.Close()
 }
